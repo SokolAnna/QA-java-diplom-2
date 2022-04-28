@@ -35,9 +35,7 @@ public class UserUpdateDataTest {
     public void updateUserAfterLoginPositiveResult() {
         ValidatableResponse createUser = userClient.create(userRegister);
         statusCodeLogin = createUser.extract().statusCode();
-        UserRegister userLogin = new UserRegister(userRegister.getEmail(), userRegister.getPassword());
-        ValidatableResponse createLogin = userClient.login(userLogin);
-        responseUserData = createLogin.extract().body().as(ResponseUserData.class);
+        responseUserData = createUser.extract().body().as(ResponseUserData.class);
 
         UserRegister newNameUser = UserGenerator.getRandom();
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newNameUser);
