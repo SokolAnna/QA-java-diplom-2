@@ -38,12 +38,14 @@ public class UserUpdateDataTest {
     public void updateUserNamePositiveResult() {
         UserRegister newUserData = UserGenerator.getRandomName();
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
-        int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseName = createResponse.extract().path("user.name");
 
+        int statusCode = createResponse.extract().statusCode();
         assertThat("User cannot update data", statusCode, equalTo(SC_OK));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User update data success is not true", responseText, equalTo(true));
+
+        String responseName = createResponse.extract().path("user.name");
         assertThat("New user name does not match", responseName, equalTo(newUserData.getName()));
     }
 
@@ -53,12 +55,14 @@ public class UserUpdateDataTest {
     public void updateUserEmailPositiveResult() {
         UserRegister newUserData = UserGenerator.getRandomEmail();
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
-        int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseEmail = createResponse.extract().path("user.email");
 
+        int statusCode = createResponse.extract().statusCode();
         assertThat("User cannot update data", statusCode, equalTo(SC_OK));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User update data success is not true", responseText, equalTo(true));
+
+        String responseEmail = createResponse.extract().path("user.email");
         assertThat("New user email does not match", responseEmail, equalTo(newUserData.getEmail().toLowerCase()));
     }
 
@@ -68,19 +72,18 @@ public class UserUpdateDataTest {
     public void updateUserPasswordPositiveResult() {
         UserRegister newUserData = UserGenerator.getRandomPassword();
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
-        int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
 
+        int statusCode = createResponse.extract().statusCode();
         assertThat("User cannot update data", statusCode, equalTo(SC_OK));
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User update data success is not true", responseText, equalTo(true));
 
         UserRegister userUpdateLogin = new UserRegister(userRegister.getEmail(), newUserData.getPassword());
         ValidatableResponse createLoginUpdate = userClient.login(userUpdateLogin);
-        statusCodeLogin = createLoginUpdate.extract().statusCode();
-        boolean responseTextLogin = createLoginUpdate.extract().path("success");
-        responseUserData = createLoginUpdate.extract().body().as(ResponseUserData.class);
 
-        assertThat("User cannot login with new data", statusCode, equalTo(SC_OK));
+        int statusCodeNewPassword = createLoginUpdate.extract().statusCode();
+        assertThat("User cannot login with new data", statusCodeNewPassword, equalTo(SC_OK));
+        boolean responseTextLogin = createLoginUpdate.extract().path("success");
         assertThat("User update login success is not true", responseTextLogin, equalTo(true));
     }
 
@@ -92,22 +95,22 @@ public class UserUpdateDataTest {
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
 
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseName = createResponse.extract().path("user.name");
-        String responseEmail = createResponse.extract().path("user.email");
-
         assertThat("User cannot update data", statusCode, equalTo(SC_OK));
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User update data success is not true", responseText, equalTo(true));
+
+        String responseName = createResponse.extract().path("user.name");
         assertThat("New user name does not match", responseName, equalTo(newUserData.getName()));
+        String responseEmail = createResponse.extract().path("user.email");
         assertThat("New user email does not match", responseEmail, equalTo(newUserData.getEmail().toLowerCase()));
 
         UserRegister userUpdateLogin = new UserRegister(newUserData.getEmail(), newUserData.getPassword());
         ValidatableResponse createLoginUpdate = userClient.login(userUpdateLogin);
-        statusCodeLogin = createLoginUpdate.extract().statusCode();
-        boolean responseTextLogin = createLoginUpdate.extract().path("success");
-        responseUserData = createLoginUpdate.extract().body().as(ResponseUserData.class);
 
-        assertThat("User cannot login with new data", statusCode, equalTo(SC_OK));
+        int statusCodeNewPassword = createLoginUpdate.extract().statusCode();
+        assertThat("User cannot login with new data", statusCodeNewPassword, equalTo(SC_OK));
+
+        boolean responseTextLogin = createLoginUpdate.extract().path("success");
         assertThat("User update login success is not true", responseTextLogin, equalTo(true));
     }
 
@@ -115,15 +118,15 @@ public class UserUpdateDataTest {
     @DisplayName("Update user without login unauthorized")
     @Description("Generate random user, try to update without token")
     public void updateUserWithoutLoginUnauthorized() {
-        statusCodeLogin = 0;
         ValidatableResponse createResponse = userClient.updateUser("", userRegister);
 
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseMessage = createResponse.extract().path("message");
-
         assertThat("User can update data without login", statusCode, equalTo(SC_UNAUTHORIZED));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User update data is not false", responseText, equalTo(false));
+
+        String responseMessage = createResponse.extract().path("message");
         assertThat("User update message does not match", responseMessage, equalTo("You should be authorised"));
     }
 }

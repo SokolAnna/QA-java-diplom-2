@@ -47,11 +47,12 @@ public class OrderCreateTest {
 
         ValidatableResponse createResponse = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        int orderNumber = createResponse.extract().path("order.number");
-
         assertThat("Order create not ok", statusCode, equalTo(SC_OK));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("Order create ok is false", responseText, equalTo(true));
+
+        int orderNumber = createResponse.extract().path("order.number");
         assertThat("Order number is 0", orderNumber, is(not(0)));
     }
 
@@ -65,7 +66,6 @@ public class OrderCreateTest {
 
         ValidatableResponse createResponse = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
-
         assertThat("Order create not server error", statusCode, equalTo(SC_INTERNAL_SERVER_ERROR));
     }
 
@@ -75,11 +75,12 @@ public class OrderCreateTest {
     public void createOrderWithoutIngredientsBadRequest() {
         ValidatableResponse createResponse = orderClient.createEmptyOrder(responseUserData.getAccessToken());
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseMessage = createResponse.extract().path("message");
-
         assertThat("Order create not Bad Request", statusCode, equalTo(SC_BAD_REQUEST));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("Order create is true", responseText, equalTo(false));
+
+        String responseMessage = createResponse.extract().path("message");
         assertThat("Order message does not match", responseMessage, equalTo("Ingredient ids must be provided"));
     }
 
@@ -93,9 +94,9 @@ public class OrderCreateTest {
 
         ValidatableResponse createResponse = orderClient.createOrder("", ingredients);
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-
         assertThat("Order create not Unauthorized", statusCode, equalTo(SC_UNAUTHORIZED));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("Order create is true", responseText, equalTo(false));
     }
 
@@ -108,7 +109,6 @@ public class OrderCreateTest {
 
         ValidatableResponse createResponse = orderClient.createOrderOneIngredient(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
-
         assertThat("Order create not server error", statusCode, equalTo(SC_INTERNAL_SERVER_ERROR));
     }
 
@@ -122,7 +122,6 @@ public class OrderCreateTest {
 
         ValidatableResponse createResponse = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
-
         assertThat("Order create not server error", statusCode, equalTo(SC_INTERNAL_SERVER_ERROR));
     }
 }

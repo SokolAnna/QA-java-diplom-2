@@ -38,11 +38,12 @@ public class UserRegisterTest {
         ValidatableResponse createResponse = userClient.create(userRegister);
 
         statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        responseUserData = createResponse.extract().body().as(ResponseUserData.class);
-
         assertThat("User cannot create", statusCode, equalTo(SC_OK));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User create success is not true", responseText, equalTo(true));
+
+        responseUserData = createResponse.extract().body().as(ResponseUserData.class);
         MatcherAssert.assertThat(responseUserData, notNullValue());
     }
 
@@ -51,14 +52,18 @@ public class UserRegisterTest {
     @Description("Create twice same users")
     public void createRegisteredUserAlreadyExists() {
         ValidatableResponse createResponse = userClient.create(userRegister);
+        statusCode = createResponse.extract().statusCode();
+        responseUserData = createResponse.extract().body().as(ResponseUserData.class);
+
         ValidatableResponse createDoubleResponse = userClient.create(userRegister);
 
         int statusCode = createDoubleResponse.extract().statusCode();
-        boolean responseText = createDoubleResponse.extract().path("success");
-        String responseMessage = createDoubleResponse.extract().path("message");
+        assertThat("User create is not forbidden", statusCode, equalTo(SC_FORBIDDEN));
 
-        assertThat("User create", statusCode, equalTo(SC_FORBIDDEN));
-        assertThat("User create ok is not true", responseText, equalTo(false));
+        boolean responseText = createDoubleResponse.extract().path("success");
+        assertThat("User create success is not false", responseText, equalTo(false));
+
+        String responseMessage = createDoubleResponse.extract().path("message");
         assertThat("User create message does not match", responseMessage, equalTo("User already exists"));
     }
 
@@ -70,11 +75,12 @@ public class UserRegisterTest {
         ValidatableResponse createResponse = userClient.create(userRegister);
 
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseMessage = createResponse.extract().path("message");
+        assertThat("User create is not forbidden", statusCode, equalTo(SC_FORBIDDEN));
 
-        assertThat("User create", statusCode, equalTo(SC_FORBIDDEN));
-        assertThat("User create ok is not true", responseText, equalTo(false));
+        boolean responseText = createResponse.extract().path("success");
+        assertThat("User create success is not false", responseText, equalTo(false));
+
+        String responseMessage = createResponse.extract().path("message");
         assertThat("User create message does not match", responseMessage, equalTo("Email, password and name are required fields"));
     }
 
@@ -86,11 +92,12 @@ public class UserRegisterTest {
         ValidatableResponse createResponse = userClient.create(userRegister);
 
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseMessage = createResponse.extract().path("message");
+        assertThat("User create is not forbidden", statusCode, equalTo(SC_FORBIDDEN));
 
-        assertThat("User create", statusCode, equalTo(SC_FORBIDDEN));
-        assertThat("User create ok is not true", responseText, equalTo(false));
+        boolean responseText = createResponse.extract().path("success");
+        assertThat("User create success is not false", responseText, equalTo(false));
+
+        String responseMessage = createResponse.extract().path("message");
         assertThat("User create message does not match", responseMessage, equalTo("Email, password and name are required fields"));
     }
 
@@ -102,11 +109,12 @@ public class UserRegisterTest {
         ValidatableResponse createResponse = userClient.create(userRegister);
 
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseMessage = createResponse.extract().path("message");
+        assertThat("User create is not forbidden", statusCode, equalTo(SC_FORBIDDEN));
 
-        assertThat("User create", statusCode, equalTo(SC_FORBIDDEN));
-        assertThat("User create ok is not true", responseText, equalTo(false));
+        boolean responseText = createResponse.extract().path("success");
+        assertThat("User create success is not false", responseText, equalTo(false));
+
+        String responseMessage = createResponse.extract().path("message");
         assertThat("User create message does not match", responseMessage, equalTo("Email, password and name are required fields"));
     }
 }

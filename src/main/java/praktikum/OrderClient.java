@@ -32,7 +32,7 @@ public class OrderClient extends MainClient {
                 .then();
     }
 
-    @Step("Create empty order {token}")
+    @Step("Create empty order {accessToken}")
     public ValidatableResponse createEmptyOrder(String accessToken) {
         return given()
                 .spec(getBaseSpec())

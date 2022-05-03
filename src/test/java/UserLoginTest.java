@@ -40,11 +40,12 @@ public class UserLoginTest {
         ValidatableResponse createResponse = userClient.login(userLogin);
 
         statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        responseUserData = createResponse.extract().body().as(ResponseUserData.class);
-
         assertThat("User cannot login", statusCode, equalTo(SC_OK));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User login success is not true", responseText, equalTo(true));
+
+        responseUserData = createResponse.extract().body().as(ResponseUserData.class);
         MatcherAssert.assertThat(responseUserData, notNullValue());
     }
 
@@ -56,11 +57,12 @@ public class UserLoginTest {
         ValidatableResponse createResponse = userClient.login(userLogin);
 
         statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseMessage = createResponse.extract().path("message");
-
         assertThat("User can login with wrong password", statusCode, equalTo(SC_UNAUTHORIZED));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("User login success is not false", responseText, equalTo(false));
+
+        String responseMessage = createResponse.extract().path("message");
         assertThat("User login message does not match", responseMessage, equalTo("email or password are incorrect"));
     }
 }

@@ -51,14 +51,14 @@ public class UserOrdersTest {
 
         ValidatableResponse createResponse = orderClient.getUserOrders(responseUserData.getAccessToken());
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        responseOrderData = createResponse.extract().body().as(ResponseOrderData.class);
+        assertThat("Get user orders not ok", statusCode, equalTo(SC_OK));
 
+        boolean responseText = createResponse.extract().path("success");
+        assertThat("Get user orders success is false", responseText, equalTo(true));
+
+        responseOrderData = createResponse.extract().body().as(ResponseOrderData.class);
         List<Orders> orders = responseOrderData.getOrders();
         Orders orderActual = orders.get(0);
-
-        assertThat("Get user orders not ok", statusCode, equalTo(SC_OK));
-        assertThat("Get user orders success is false", responseText, equalTo(true));
         assertThat("Order numbers does not match", orderActual.getNumber(), equalTo(orderNumber));
         MatcherAssert.assertThat(responseOrderData, notNullValue());
     }
@@ -69,11 +69,12 @@ public class UserOrdersTest {
     public void getUserOrdersWithoutTokenUnauthorized() {
         ValidatableResponse createResponse = orderClient.getUserOrders("");
         int statusCode = createResponse.extract().statusCode();
-        boolean responseText = createResponse.extract().path("success");
-        String responseMessage = createResponse.extract().path("message");
-
         assertThat("Get user orders not Unauthorized", statusCode, equalTo(SC_UNAUTHORIZED));
+
+        boolean responseText = createResponse.extract().path("success");
         assertThat("Get user orders is true", responseText, equalTo(false));
+
+        String responseMessage = createResponse.extract().path("message");
         assertThat("Get user orders message does not match", responseMessage, equalTo("You should be authorised"));
     }
 }
