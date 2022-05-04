@@ -18,6 +18,27 @@ public class OrderCreateTest {
     UserRegister userRegister;
     ResponseUserData responseUserData;
     private int createStatusCode;
+    private ArrayList<String> ingredients = new ArrayList<>();
+    final String bunHash = "61c0c5a71d1f82001bdaaa6d";
+    final String fillingHash = "61c0c5a71d1f82001bdaaa6f";
+    final String randomHash = "61c0c5a71d1f82001bdaaaaa";
+    final String randomIngredient1 = "random1";
+    final String randomIngredient2 = "random2";
+
+    private void crateRealIngredients() {
+        ingredients.add(bunHash);
+        ingredients.add(fillingHash);
+    }
+
+    private void createErrIngredients() {
+        ingredients.add(randomIngredient1);
+        ingredients.add(randomIngredient2);
+    }
+
+    private void createOneErrOneRealIngredients() {
+        ingredients.add(randomHash);
+        ingredients.add(fillingHash);
+    }
 
     @Before
     public void setUp() {
@@ -35,15 +56,14 @@ public class OrderCreateTest {
         if (createStatusCode == 200) {
             userClient.deleteUser(responseUserData.getAccessToken());
         }
+        ingredients.clear();
     }
 
     @Test
     @DisplayName("Create order with real token")
     @Description("Positive test with two ingredients")
     public void createOrderLoginUserPositiveResult() {
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("61c0c5a71d1f82001bdaaa6d");
-        ingredients.add("61c0c5a71d1f82001bdaaa6f");
+        crateRealIngredients();
 
         ValidatableResponse createResponse = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
@@ -60,9 +80,7 @@ public class OrderCreateTest {
     @DisplayName("Create order with wrong ingredient hash code")
     @Description("Test with token, Internal Server Error expected")
     public void createOrderWrongIngredientServerError() {
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("random1");
-        ingredients.add("random2");
+        createErrIngredients();
 
         ValidatableResponse createResponse = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
@@ -88,9 +106,7 @@ public class OrderCreateTest {
     @DisplayName("Create order two ingredients without token")
     @Description("Unauthorized excepted, only authorized users can order")
     public void createOrderWithoutLoginUnauthorized() {
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("61c0c5a71d1f82001bdaaa6d");
-        ingredients.add("61c0c5a71d1f82001bdaaa6f");
+        crateRealIngredients();
 
         ValidatableResponse createResponse = orderClient.createOrder("", ingredients);
         int statusCode = createResponse.extract().statusCode();
@@ -104,8 +120,7 @@ public class OrderCreateTest {
     @DisplayName("Crate order random hash server error")
     @Description("The hash format like ingredient, but not real")
     public void createOrderRandomHashServerError() {
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("61c0c5a71d1f82001bdaaaaa");
+        ingredients.add(randomHash);
 
         ValidatableResponse createResponse = orderClient.createOrderOneIngredient(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
@@ -116,9 +131,7 @@ public class OrderCreateTest {
     @DisplayName("Crate order random and normal hash server error")
     @Description("The random hash format like ingredient, but not real")
     public void createOrderRandomPlusNormalHashServerError() {
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("61c0c5a71d1f82001bdaaaaa"); //random hash
-        ingredients.add("61c0c5a71d1f82001bdaaa6f"); //real hash
+        createOneErrOneRealIngredients();
 
         ValidatableResponse createResponse = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
