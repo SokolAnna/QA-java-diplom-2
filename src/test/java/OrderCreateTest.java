@@ -122,7 +122,7 @@ public class OrderCreateTest {
     public void createOrderRandomHashServerError() {
         ingredients.add(randomHash);
 
-        ValidatableResponse createResponse = orderClient.createOrderOneIngredient(responseUserData.getAccessToken(), ingredients);
+        ValidatableResponse createResponse = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int statusCode = createResponse.extract().statusCode();
         assertThat("Order create not server error", statusCode, equalTo(SC_INTERNAL_SERVER_ERROR));
     }

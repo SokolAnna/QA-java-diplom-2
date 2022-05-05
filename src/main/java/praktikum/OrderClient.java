@@ -4,29 +4,22 @@ import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
 public class OrderClient extends MainClient {
     private static final String ORDER_PATH = "orders";
+    Map<String, ArrayList<String>> requestBody = new HashMap<String, ArrayList<String>>();
 
     @Step("Create order {token}")
     public ValidatableResponse createOrder(String accessToken, ArrayList<String> ingredients) {
+        requestBody.put("ingredients", ingredients);
         return given()
                 .spec(getBaseSpec())
                 .header("Authorization", accessToken)
-                .body("{\"ingredients\": [\"" + ingredients.get(0) + "\",\"" + ingredients.get(1) + "\"]}")
-                .when()
-                .post(ORDER_PATH)
-                .then();
-    }
-
-    @Step("Create order {token} one ingredient")
-    public ValidatableResponse createOrderOneIngredient(String accessToken, ArrayList<String> ingredients) {
-        return given()
-                .spec(getBaseSpec())
-                .header("Authorization", accessToken)
-                .body("{\"ingredients\": [\"" + ingredients.get(0) + "\"]}")
+                .body(requestBody)
                 .when()
                 .post(ORDER_PATH)
                 .then();
