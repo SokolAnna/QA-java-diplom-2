@@ -22,6 +22,8 @@ public class UserOrdersTest {
     ResponseOrderData responseOrderData;
     ArrayList<String> ingredients = new ArrayList<>();
     private int createStatusCode;
+    final String bunHash = "61c0c5a71d1f82001bdaaa6d";
+    final String fillingHash = "61c0c5a71d1f82001bdaaa6f";
 
     @Before
     public void setUp() {
@@ -44,8 +46,8 @@ public class UserOrdersTest {
     @DisplayName("Get user orders with token positive result")
     @Description("Created order and find order number from user orders list")
     public void getUserOrdersWithTokenPositiveResult() {
-        ingredients.add("61c0c5a71d1f82001bdaaa6d");
-        ingredients.add("61c0c5a71d1f82001bdaaa6f");
+        ingredients.add(bunHash);
+        ingredients.add(fillingHash);
         ValidatableResponse createOrder = orderClient.createOrder(responseUserData.getAccessToken(), ingredients);
         int orderNumber = createOrder.extract().path("order.number");
 
