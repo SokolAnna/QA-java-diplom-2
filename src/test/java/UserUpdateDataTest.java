@@ -19,7 +19,7 @@ public class UserUpdateDataTest {
     @Before
     public void setUp() {
         userClient = new UserClient();
-        userRegister = UserGenerator.getRandom();
+        userRegister = UserGenerator.getRandom(true, true, true);
         ValidatableResponse createUser = userClient.create(userRegister);
         statusCodeLogin = createUser.extract().statusCode();
         responseUserData = createUser.extract().body().as(ResponseUserData.class);
@@ -36,7 +36,7 @@ public class UserUpdateDataTest {
     @DisplayName("Update user name positive result")
     @Description("Set only new name")
     public void updateUserNamePositiveResult() {
-        UserRegister newUserData = UserGenerator.getRandomName();
+        UserRegister newUserData = UserGenerator.getRandom(false, false, true);
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
 
         int statusCode = createResponse.extract().statusCode();
@@ -53,7 +53,7 @@ public class UserUpdateDataTest {
     @DisplayName("Update user email positive result")
     @Description("Set only new email")
     public void updateUserEmailPositiveResult() {
-        UserRegister newUserData = UserGenerator.getRandomEmail();
+        UserRegister newUserData = UserGenerator.getRandom(true, false, false);
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
 
         int statusCode = createResponse.extract().statusCode();
@@ -70,7 +70,7 @@ public class UserUpdateDataTest {
     @DisplayName("Update user password positive result")
     @Description("Set only new password")
     public void updateUserPasswordPositiveResult() {
-        UserRegister newUserData = UserGenerator.getRandomPassword();
+        UserRegister newUserData = UserGenerator.getRandom(false, true, false);
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
 
         int statusCode = createResponse.extract().statusCode();
@@ -91,7 +91,7 @@ public class UserUpdateDataTest {
     @DisplayName("Update user after login positive result")
     @Description("Update all user data, including login with update data")
     public void updateUserAllDataAndLoginPositiveResult() {
-        UserRegister newUserData = UserGenerator.getRandom();
+        UserRegister newUserData = UserGenerator.getRandom(true, true, true);
         ValidatableResponse createResponse = userClient.updateUser(responseUserData.getAccessToken(), newUserData);
 
         int statusCode = createResponse.extract().statusCode();

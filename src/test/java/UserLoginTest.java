@@ -21,7 +21,7 @@ public class UserLoginTest {
     @Before
     public void setUp() {
         userClient = new UserClient();
-        userRegister = UserGenerator.getRandom();
+        userRegister = UserGenerator.getRandom(true, true, true);
     }
 
     @After

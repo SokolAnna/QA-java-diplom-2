@@ -21,7 +21,7 @@ public class UserRegisterTest {
     @Before
     public void setUp() {
         userClient = new UserClient();
-        userRegister = UserGenerator.getRandom();
+        userRegister = UserGenerator.getRandom(true, true, true);
     }
 
     @After
@@ -71,7 +71,7 @@ public class UserRegisterTest {
     @DisplayName("Create user without name is forbidden")
     @Description("The username is one of the required parameters")
     public void createUserWithoutNameForbidden() {
-        userRegister = UserGenerator.getRandomNoName();
+        userRegister = UserGenerator.getRandom(true, true, false);
         ValidatableResponse createResponse = userClient.create(userRegister);
 
         int statusCode = createResponse.extract().statusCode();
@@ -88,7 +88,7 @@ public class UserRegisterTest {
     @DisplayName("Create user without password is forbidden")
     @Description("The password is one of the required parameters")
     public void createUserWithoutPasswordForbidden() {
-        userRegister = UserGenerator.getRandomNoPassword();
+        userRegister = UserGenerator.getRandom(true, false, true);
         ValidatableResponse createResponse = userClient.create(userRegister);
 
         int statusCode = createResponse.extract().statusCode();
@@ -105,7 +105,7 @@ public class UserRegisterTest {
     @DisplayName("Create user without email is forbidden")
     @Description("The email is one of the required parameters")
     public void createUserWithoutEmailForbidden() {
-        userRegister = UserGenerator.getRandomNoEmail();
+        userRegister = UserGenerator.getRandom(false, true, true);
         ValidatableResponse createResponse = userClient.create(userRegister);
 
         int statusCode = createResponse.extract().statusCode();

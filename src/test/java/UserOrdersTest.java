@@ -29,7 +29,7 @@ public class UserOrdersTest {
     public void setUp() {
         userClient = new UserClient();
         orderClient = new OrderClient();
-        userRegister = UserGenerator.getRandom();
+        userRegister = UserGenerator.getRandom(true, true, true);
         ValidatableResponse createUser = userClient.create(userRegister);
         createStatusCode = createUser.extract().statusCode();
         responseUserData = createUser.extract().body().as(ResponseUserData.class);
